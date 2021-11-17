@@ -1,0 +1,6 @@
+rootProject.name = 'CloudSystem'
+include 'http-server'
+include 'api-cloud'
+include 'server'
+include 'http-client'
+
