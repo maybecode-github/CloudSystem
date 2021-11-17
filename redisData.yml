@@ -1,4 +1,0 @@
-redis:
-  host: 185.234.72.12
-  port: 6379
-  password: _maybejava_
