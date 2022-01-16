@@ -8,7 +8,9 @@ import java.util.Arrays;
 
 public class CommandConsole {
 
+
     private final CommandManager commandManager = new CommandManager();
+
     private static ConsoleReader CONSOLE_READER;
 
     @SneakyThrows

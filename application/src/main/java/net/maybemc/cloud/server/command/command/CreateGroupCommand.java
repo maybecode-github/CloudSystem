@@ -1,14 +1,18 @@
 package net.maybemc.cloud.server.command.command;
 
 import net.maybemc.cloud.api.cloud.entity.group.CloudGroup;
-import net.maybemc.cloud.server.CloudServerApplication;
+import net.maybemc.cloud.http.client.CloudHttpClient;
 import net.maybemc.cloud.server.command.CloudCommand;
 import net.maybemc.cloud.server.command.ICloudCommand;
+import net.maybemc.cloud.service.provider.ServiceProvider;
 
 import java.io.IOException;
 
 @CloudCommand(name = "createGroup", description = "creates a cloud group")
 public class CreateGroupCommand implements ICloudCommand {
+
+    private final CloudHttpClient cloudHttpClient = ServiceProvider.getService(CloudHttpClient.class);
+
     @Override
     public void onExecute(String[] args) {
         if (args.length != 2) {
@@ -22,7 +26,7 @@ public class CreateGroupCommand implements ICloudCommand {
             cloudGroup.setGroupName(groupName);
             cloudGroup.setMinServiceAmount(minServiceAmount);
             try {
-                CloudServerApplication.getClient().getCloudGroupService().createCloudGroup(cloudGroup).execute();
+                cloudHttpClient.getCloudGroupService().createCloudGroup(cloudGroup).execute();
             } catch (IOException e) {
                 System.out.println("Die Gruppe " + cloudGroup + " konnte nicht erstellt werden!");
             }

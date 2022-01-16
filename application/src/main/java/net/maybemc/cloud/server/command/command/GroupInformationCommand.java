@@ -2,15 +2,23 @@ package net.maybemc.cloud.server.command.command;
 
 import lombok.SneakyThrows;
 import net.maybemc.cloud.api.cloud.entity.group.CloudGroup;
-import net.maybemc.cloud.http.client.util.ResponseUtil;
-import net.maybemc.cloud.server.CloudServerApplication;
+import net.maybemc.cloud.http.client.CloudHttpClient;
 import net.maybemc.cloud.server.command.CloudCommand;
 import net.maybemc.cloud.server.command.ICloudCommand;
+import net.maybemc.cloud.service.provider.ServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import retrofit2.Response;
 
 import java.io.IOException;
 
 @CloudCommand(name = "groupInformation", description = "retrieve information of specific cloud group", aliases = {"gi", "groupInfo"})
 public class GroupInformationCommand implements ICloudCommand {
+
+    private final Logger logger = LoggerFactory.getLogger(GroupInformationCommand.class);
+    private
+    final CloudHttpClient cloudHttpClient = ServiceProvider.getService(CloudHttpClient.class);
+
     @SneakyThrows
     @Override
     public void onExecute(String[] args) {
@@ -20,13 +28,15 @@ public class GroupInformationCommand implements ICloudCommand {
         }
         String group = args[0];
         try {
-            final CloudGroup cloudGroup = ResponseUtil.processResponse(CloudServerApplication.getClient().getCloudGroupService().getCloudGroup(group).execute());
+            Response<CloudGroup> execute = cloudHttpClient.getCloudGroupService().getCloudGroup(group).execute();
+            CloudGroup cloudGroup = execute.body();
             if (cloudGroup == null) {
-                System.out.println("the group " + group + " was not found!");
+                logger.error(String.format("There is no group called %s", group));
                 return;
             }
-            System.out.println("group name = " + cloudGroup.getGroupName());
-        } catch (IOException e) {
+            logger.info("group name: " + cloudGroup.getGroupName());
+            logger.info("min service amount: " + cloudGroup.getMinServiceAmount());
+        } catch (IOException | NullPointerException e) {
             System.out.println("there was an error while retrieving group information!");
         }
     }

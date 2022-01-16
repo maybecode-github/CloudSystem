@@ -1,7 +1,6 @@
 package net.maybemc.cloud.http.client.service;
 
 import net.maybemc.cloud.api.cloud.entity.group.CloudGroup;
-import net.maybemc.cloud.api.cloud.entity.response.CloudResponseEntity;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -13,10 +12,10 @@ import java.util.List;
 public interface CloudGroupService {
 
     @POST("cloudGroup/create")
-    Call<CloudResponseEntity<CloudGroup>> createCloudGroup(@Body final CloudGroup cloudGroup);
+    Call<CloudGroup> createCloudGroup(@Body CloudGroup cloudGroup);
 
     @GET("cloudGroup/get")
-    Call<CloudResponseEntity<CloudGroup>> getCloudGroup(@Query("groupName") final String groupName);
+    Call<CloudGroup> getCloudGroup(@Query("groupName") String groupName);
 
     @GET("cloudGroups")
     Call<List<CloudGroup>> getCloudGroups();

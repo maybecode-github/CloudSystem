@@ -26,7 +26,6 @@ public class CloudGroupController {
     @GetMapping("/cloudGroup/get")
     public ResponseEntity<CloudGroup> fetchCloudGroupByName(@RequestParam("groupName") String groupName) {
         CloudGroup cloudGroup = cloudGroupService.fetchByName(groupName);
-        System.out.println("lol");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         try {

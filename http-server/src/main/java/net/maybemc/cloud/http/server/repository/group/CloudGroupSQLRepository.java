@@ -3,7 +3,6 @@ package net.maybemc.cloud.http.server.repository.group;
 import net.maybemc.cloud.api.cloud.entity.group.CloudGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
@@ -26,14 +25,14 @@ public class CloudGroupSQLRepository implements ICloudGroupRepository {
     @Override
     public List<CloudGroup> fetchAll() {
         List<CloudGroup> cloudGroups = new ArrayList<>();
-        Iterable<CloudGroup> groups = cloudGroupCrudRepository.findAll();
-        groups.forEach(cloudGroups::add);
+        cloudGroupCrudRepository.findAll().forEach(cloudGroups::add);
         return cloudGroups;
     }
 
     @Override
     public CloudGroup fetch(String groupName) {
-        return cloudGroupCrudRepository.findById(groupName).orElse(new CloudGroup());
+        return cloudGroupCrudRepository.findById(groupName).orElseThrow(() ->
+                new NullPointerException(String.format("Unknown group: %s", groupName)));
     }
 
     @Override

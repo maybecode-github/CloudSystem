@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 @CloudCommand(name = "help")
 public class HelpCommand implements ICloudCommand {
+
     @Override
     public void onExecute(String[] args) {
         System.out.println("help command");

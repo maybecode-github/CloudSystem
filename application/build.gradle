@@ -9,12 +9,17 @@ repositories {
     mavenCentral()
 }
 
+build {
+    buildDir = 'C:\\Users\\priva\\Desktop\\localhost\\TempestCloud\\application\\'
+}
+
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
 
     implementation project(':api-cloud')
     implementation project(':http-client')
+    implementation project(':service-provider')
     implementation 'jline:jline:2.14.6'
     implementation 'org.reflections:reflections:0.9.9'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

@@ -20,10 +20,7 @@ public class AnnotationProcessor {
     }
 
     private void provideAnnotation(Reflections reflections) {
-        reflections.getTypesAnnotatedWith(CloudCommand.class).forEach(command -> {
-            System.out.println("found " + command.getSimpleName());
-            processCommand(command);
-        });
+        reflections.getTypesAnnotatedWith(CloudCommand.class).forEach(this::processCommand);
     }
 
     private void processCommand(Class<?> clazz) {

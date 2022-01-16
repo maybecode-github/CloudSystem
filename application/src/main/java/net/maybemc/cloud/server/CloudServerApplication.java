@@ -8,6 +8,9 @@ import net.maybemc.cloud.http.client.CloudHttpClient;
 import net.maybemc.cloud.server.command.CommandConsole;
 import net.maybemc.cloud.server.command.CommandManager;
 import net.maybemc.cloud.server.processor.AnnotationProcessor;
+import net.maybemc.cloud.service.provider.ServiceProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -15,15 +18,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CloudServerApplication {
 
     @Getter
-    private static CloudHttpClient client;
+    private static Logger logger;
 
     @SneakyThrows
     public static void main(String[] args) {
         SpringApplication.run(CloudServerApplication.class, args);
-        new AnnotationProcessor(new CommandManager()).processAnnotations();
+        logger = LoggerFactory.getLogger(CloudServerApplication.class);
+
         CacheConfig config = new MBCacheConfig("config/data.yml");
-        client = new CloudHttpClient(config.getString("http.baseUrl", "localhost"),
+        CloudHttpClient client = new CloudHttpClient(config.getString("http.baseUrl", "localhost"),
                 config.getString("api-key", "X-API-KEY"));
+
+        ServiceProvider.registerProvider(CloudHttpClient.class, client);
+
+        new AnnotationProcessor(new CommandManager()).processAnnotations();
         new CommandConsole().processConsole();
     }
 }

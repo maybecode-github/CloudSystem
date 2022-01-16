@@ -1,0 +1,5 @@
+<hibernate-configuration xmlns="http://www.hibernate.org/xsd/hibernate-configuration">
+    <session-factory>
+        <mapping class="net.maybemc.cloud.api.cloud.entity.group.CloudGroup"/>
+    </session-factory>
+</hibernate-configuration>
