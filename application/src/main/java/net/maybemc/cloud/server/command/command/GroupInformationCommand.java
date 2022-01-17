@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
 
 @CloudCommand(name = "groupInformation", description = "retrieve information of specific cloud group", aliases = {"gi", "groupInfo"})
 public class GroupInformationCommand implements ICloudCommand {
@@ -28,14 +30,11 @@ public class GroupInformationCommand implements ICloudCommand {
         }
         String group = args[0];
         try {
-            Response<CloudGroup> execute = cloudHttpClient.getCloudGroupService().getCloudGroup(group).execute();
-            CloudGroup cloudGroup = execute.body();
-            if (cloudGroup == null) {
-                logger.error(String.format("There is no group called %s", group));
-                return;
-            }
-            logger.info("group name: " + cloudGroup.getGroupName());
-            logger.info("min service amount: " + cloudGroup.getMinServiceAmount());
+            Response<Optional<CloudGroup>> execute = cloudHttpClient.getCloudGroupService().getCloudGroup(group).execute();
+            Objects.requireNonNull(execute.body()).ifPresent(cloudGroup -> {
+                logger.info("group name: " + cloudGroup.getGroupName());
+                logger.info("min service amount: " + cloudGroup.getMinServiceAmount());
+            });
         } catch (IOException | NullPointerException e) {
             System.out.println("there was an error while retrieving group information!");
         }

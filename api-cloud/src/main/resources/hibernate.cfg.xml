@@ -1,5 +1,6 @@
 <hibernate-configuration xmlns="http://www.hibernate.org/xsd/hibernate-configuration">
     <session-factory>
         <mapping class="net.maybemc.cloud.api.cloud.entity.group.CloudGroup"/>
+        <mapping class="net.maybemc.cloud.api.cloud.entity.server.CloudServer"/>
     </session-factory>
 </hibernate-configuration>

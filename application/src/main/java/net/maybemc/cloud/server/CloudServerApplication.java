@@ -5,9 +5,7 @@ import de.maybecode.mbcache.config.MBCacheConfig;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.maybemc.cloud.http.client.CloudHttpClient;
-import net.maybemc.cloud.server.command.CommandConsole;
-import net.maybemc.cloud.server.command.CommandManager;
-import net.maybemc.cloud.server.processor.AnnotationProcessor;
+import net.maybemc.cloud.server.handler.CloudStoppingHandler;
 import net.maybemc.cloud.service.provider.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +22,11 @@ public class CloudServerApplication {
     public static void main(String[] args) {
         SpringApplication.run(CloudServerApplication.class, args);
         logger = LoggerFactory.getLogger(CloudServerApplication.class);
-
         CacheConfig config = new MBCacheConfig("config/data.yml");
         CloudHttpClient client = new CloudHttpClient(config.getString("http.baseUrl", "localhost"),
                 config.getString("api-key", "X-API-KEY"));
 
         ServiceProvider.registerProvider(CloudHttpClient.class, client);
-
-        new AnnotationProcessor(new CommandManager()).processAnnotations();
-        new CommandConsole().processConsole();
+        new CloudStoppingHandler().addShutdownHook(new CloudStoppingHandler.CloudHook());
     }
 }

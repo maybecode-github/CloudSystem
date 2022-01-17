@@ -31,8 +31,7 @@ public class CloudGroupSQLRepository implements ICloudGroupRepository {
 
     @Override
     public CloudGroup fetch(String groupName) {
-        return cloudGroupCrudRepository.findById(groupName).orElseThrow(() ->
-                new NullPointerException(String.format("Unknown group: %s", groupName)));
+        return cloudGroupCrudRepository.findById(groupName).orElse(null);
     }
 
     @Override

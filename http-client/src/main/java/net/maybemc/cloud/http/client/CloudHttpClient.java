@@ -2,6 +2,7 @@ package net.maybemc.cloud.http.client;
 
 import lombok.Getter;
 import net.maybemc.cloud.http.client.service.CloudGroupService;
+import net.maybemc.cloud.http.client.service.CloudServerService;
 import net.maybemc.cloud.service.provider.IServiceProvider;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -13,6 +14,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class CloudHttpClient implements IServiceProvider {
 
     private final CloudGroupService cloudGroupService;
+    private final CloudServerService cloudServerService;
 
     public CloudHttpClient(String baseUrl, String apiKey) {
         final OkHttpClient httpClient = new OkHttpClient.Builder().addInterceptor(chain ->
@@ -23,6 +25,7 @@ public class CloudHttpClient implements IServiceProvider {
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
         cloudGroupService = retrofit.create(CloudGroupService.class);
+        cloudServerService = retrofit.create(CloudServerService.class);
     }
 
 }
