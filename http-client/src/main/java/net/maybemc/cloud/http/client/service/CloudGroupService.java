@@ -8,7 +8,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CloudGroupService {
 
@@ -16,7 +15,7 @@ public interface CloudGroupService {
     Call<CloudGroup> createCloudGroup(@Body CloudGroup cloudGroup);
 
     @GET("cloudGroup/get")
-    Call<Optional<CloudGroup>> getCloudGroup(@Query("groupName") String groupName);
+    Call<CloudGroup> getCloudGroup(@Query("groupName") String groupName);
 
     @GET("cloudGroups")
     Call<List<CloudGroup>> getCloudGroups();

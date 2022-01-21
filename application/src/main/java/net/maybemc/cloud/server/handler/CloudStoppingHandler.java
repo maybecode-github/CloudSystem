@@ -1,5 +1,6 @@
 package net.maybemc.cloud.server.handler;
 
+import de.maybecode.mbcache.config.MBCacheConfig;
 import net.maybemc.cloud.api.cloud.entity.server.CloudServer;
 import net.maybemc.cloud.http.client.CloudHttpClient;
 import net.maybemc.cloud.server.command.CommandConsole;
@@ -43,6 +44,8 @@ public class CloudStoppingHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            new LibraryHandler(new MBCacheConfig("settings/templates.yml")).indexLibraries();
 
             new AnnotationProcessor(new CommandManager()).processAnnotations();
             new CommandConsole().processConsole();

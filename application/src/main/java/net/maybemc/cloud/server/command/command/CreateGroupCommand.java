@@ -1,6 +1,7 @@
 package net.maybemc.cloud.server.command.command;
 
 import net.maybemc.cloud.api.cloud.entity.group.CloudGroup;
+import net.maybemc.cloud.api.cloud.library.ServerType;
 import net.maybemc.cloud.http.client.CloudHttpClient;
 import net.maybemc.cloud.server.command.CloudCommand;
 import net.maybemc.cloud.server.command.ICloudCommand;
@@ -15,23 +16,31 @@ public class CreateGroupCommand implements ICloudCommand {
 
     @Override
     public void onExecute(String[] args) {
-        if (args.length != 2) {
-            System.out.println("createGroup <groupName> <minServiceAmount>");
+        if (args.length != 5) {
+            System.out.println("createGroup <groupName> <version> <PAPER_SPIGOT/BUNGEE_CORD> <maxRam> <minServiceAmount>");
             return;
         }
         try {
             String groupName = args[0];
-            int minServiceAmount = Integer.parseInt(args[1]);
+            String version = args[1];
+            ServerType serverType = ServerType.valueOf(args[2].toUpperCase());
+            int maxRam = Integer.parseInt(args[3]);
+            int minServiceAmount = Integer.parseInt(args[4]);
+
             CloudGroup cloudGroup = new CloudGroup();
+            cloudGroup.setMaxRam(maxRam);
+            cloudGroup.setVersion(version);
             cloudGroup.setGroupName(groupName);
+            cloudGroup.setServerType(serverType);
             cloudGroup.setMinServiceAmount(minServiceAmount);
+
             try {
                 cloudHttpClient.getCloudGroupService().createCloudGroup(cloudGroup).execute();
             } catch (IOException e) {
                 System.out.println("Die Gruppe " + cloudGroup + " konnte nicht erstellt werden!");
             }
             System.out.println("created cloud group " + groupName);
-        } catch (NumberFormatException exception) {
+        } catch (NumberFormatException | ClassCastException exception) {
             System.out.println("Es gab einen Fehler beim erstellen der Gruppe!");
         }
     }

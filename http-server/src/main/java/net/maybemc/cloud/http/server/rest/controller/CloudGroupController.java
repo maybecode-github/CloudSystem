@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class CloudGroupController {
@@ -25,13 +24,12 @@ public class CloudGroupController {
     }
 
     @GetMapping("/cloudGroup/get")
-    public ResponseEntity<Optional<CloudGroup>> fetchCloudGroupByName(@RequestParam("groupName") String groupName) {
+    public ResponseEntity<CloudGroup> fetchCloudGroupByName(@RequestParam("groupName") String groupName) {
         CloudGroup cloudGroup = cloudGroupService.fetchByName(groupName);
-        Optional<CloudGroup> cloudGroupOptional = Optional.ofNullable(cloudGroup);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         try {
-            return new ResponseEntity<>(cloudGroupOptional, headers, HttpStatus.OK);
+            return new ResponseEntity<>(cloudGroup, headers, HttpStatus.OK);
         } catch (NullPointerException exception) {
             return new ResponseEntity<>(headers, HttpStatus.INTERNAL_SERVER_ERROR);
         }

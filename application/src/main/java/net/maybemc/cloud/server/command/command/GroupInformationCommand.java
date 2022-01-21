@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Optional;
 
 @CloudCommand(name = "groupInformation", description = "retrieve information of specific cloud group", aliases = {"gi", "groupInfo"})
 public class GroupInformationCommand implements ICloudCommand {
@@ -30,11 +28,13 @@ public class GroupInformationCommand implements ICloudCommand {
         }
         String group = args[0];
         try {
-            Response<Optional<CloudGroup>> execute = cloudHttpClient.getCloudGroupService().getCloudGroup(group).execute();
-            Objects.requireNonNull(execute.body()).ifPresent(cloudGroup -> {
-                logger.info("group name: " + cloudGroup.getGroupName());
-                logger.info("min service amount: " + cloudGroup.getMinServiceAmount());
-            });
+            Response<CloudGroup> execute = cloudHttpClient.getCloudGroupService().getCloudGroup(group).execute();
+            CloudGroup cloudGroup = execute.body();
+            logger.info("group name: " + cloudGroup.getGroupName());
+            logger.info("min service amount: " + cloudGroup.getMinServiceAmount());
+            logger.info("max ram: " + cloudGroup.getMaxRam());
+            logger.info("version: " + cloudGroup.getVersion());
+            logger.info("server type: " + cloudGroup.getServerType().name());
         } catch (IOException | NullPointerException e) {
             System.out.println("there was an error while retrieving group information!");
         }

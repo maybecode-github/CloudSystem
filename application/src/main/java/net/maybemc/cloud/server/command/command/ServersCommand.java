@@ -28,7 +28,7 @@ public class ServersCommand implements ICloudCommand {
         } else {
             String groupName = args[0];
             try {
-                if (!Objects.requireNonNull(cloudHttpClient.getCloudGroupService().getCloudGroup(groupName).execute().body()).isPresent()) {
+                if (cloudHttpClient.getCloudGroupService().getCloudGroup(groupName).execute().body() == null) {
                     logger.error("The group could not be found!");
                     return;
                 }
@@ -37,7 +37,7 @@ public class ServersCommand implements ICloudCommand {
                         .stream().filter(filter -> filter.getCloudGroup().getGroupName().equalsIgnoreCase(groupName))
                         .forEach(server -> logger.info(server.getServerName() + " | " + server.getCloudGroup().getGroupName()));
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("There was an error while retrieving group information!");
             }
         }
     }
