@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group 'net.maybemc.cloud'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':api-cloud')
+    implementation project(':service-provider')
+
+    implementation 'commons-io:commons-io:2.11.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+bootJar {
+    enabled = false
+}
+
+bootJarMainClassName {
+    enabled = false
+}

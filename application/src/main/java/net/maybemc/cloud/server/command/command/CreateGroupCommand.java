@@ -1,6 +1,7 @@
 package net.maybemc.cloud.server.command.command;
 
 import net.maybemc.cloud.api.cloud.entity.group.CloudGroup;
+import net.maybemc.cloud.api.cloud.entity.group.mode.ServerMode;
 import net.maybemc.cloud.api.cloud.library.ServerType;
 import net.maybemc.cloud.http.client.CloudHttpClient;
 import net.maybemc.cloud.server.command.CloudCommand;
@@ -16,22 +17,24 @@ public class CreateGroupCommand implements ICloudCommand {
 
     @Override
     public void onExecute(String[] args) {
-        if (args.length != 5) {
-            System.out.println("createGroup <groupName> <version> <PAPER_SPIGOT/BUNGEE_CORD> <maxRam> <minServiceAmount>");
+        if (args.length != 6) {
+            System.out.println("createGroup <groupName> <version> <PAPER_SPIGOT/BUNGEE_CORD> <STATIC/DYNAMIC> <maxRam> <minServiceAmount>");
             return;
         }
         try {
             String groupName = args[0];
             String version = args[1];
             ServerType serverType = ServerType.valueOf(args[2].toUpperCase());
-            int maxRam = Integer.parseInt(args[3]);
-            int minServiceAmount = Integer.parseInt(args[4]);
+            ServerMode serverMode = ServerMode.valueOf(args[3].toUpperCase());
+            int maxRam = Integer.parseInt(args[4]);
+            int minServiceAmount = Integer.parseInt(args[5]);
 
             CloudGroup cloudGroup = new CloudGroup();
             cloudGroup.setMaxRam(maxRam);
             cloudGroup.setVersion(version);
             cloudGroup.setGroupName(groupName);
             cloudGroup.setServerType(serverType);
+            cloudGroup.setServerMode(serverMode);
             cloudGroup.setMinServiceAmount(minServiceAmount);
 
             try {

@@ -2,6 +2,7 @@ package net.maybemc.cloud.api.cloud.entity.group;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.maybemc.cloud.api.cloud.entity.group.mode.ServerMode;
 import net.maybemc.cloud.api.cloud.library.ServerType;
 
 import javax.persistence.Entity;
@@ -20,6 +21,8 @@ public class CloudGroup {
 
     @Enumerated(EnumType.STRING)
     private ServerType serverType;
+    @Enumerated(EnumType.STRING)
+    private ServerMode serverMode;
 
     private int maxRam;
     private int minServiceAmount;

@@ -1,12 +1,14 @@
 package net.maybemc.cloud.server.handler;
 
-import de.maybecode.mbcache.config.MBCacheConfig;
 import net.maybemc.cloud.api.cloud.entity.server.CloudServer;
 import net.maybemc.cloud.http.client.CloudHttpClient;
 import net.maybemc.cloud.server.command.CommandConsole;
 import net.maybemc.cloud.server.command.CommandManager;
 import net.maybemc.cloud.server.processor.AnnotationProcessor;
+import net.maybemc.cloud.server.server.ServerCreator;
+import net.maybemc.cloud.server.server.ServerStarter;
 import net.maybemc.cloud.service.provider.ServiceProvider;
+import net.maybemc.cloud.template.TemplatePullManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +29,9 @@ public class CloudStoppingHandler {
 
         @Override
         public void run() {
+            new LibraryHandler().indexLibraries();
             try {
+                TemplatePullManager templatePullManager = new TemplatePullManager();
                 Objects.requireNonNull(cloudHttpClient.getCloudGroupService().getCloudGroups().execute().body()).forEach(cloudGroup -> {
                     for (int i = 1; i < (cloudGroup.getMinServiceAmount() + 1); i++) {
                         CloudServer cloudServer = new CloudServer();
@@ -35,17 +39,15 @@ public class CloudStoppingHandler {
                         cloudServer.setServerName(cloudGroup.getGroupName() + "-" + i);
                         try {
                             cloudHttpClient.getCloudServerService().createCloudServer(cloudServer).execute();
+                            new ServerCreator(cloudServer, templatePullManager).createServer();
                         } catch (IOException e) {
                             logger.warn(String.format("could not create server %s", cloudServer.getServerName()));
                         }
-                        logger.info(String.format("started cloud server %s", cloudServer.getServerName()));
                     }
                 });
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            new LibraryHandler(new MBCacheConfig("settings/templates.yml")).indexLibraries();
 
             new AnnotationProcessor(new CommandManager()).processAnnotations();
             new CommandConsole().processConsole();
@@ -65,6 +67,7 @@ public class CloudStoppingHandler {
                 Objects.requireNonNull(cloudHttpClient.getCloudServerService().getAllCloudServers().execute().body()).forEach(cloudServer -> {
                     try {
                         cloudHttpClient.getCloudServerService().deleteCloudServer(cloudServer.getServerName()).execute();
+                        new ServerStarter().stopServer(cloudServer);
                     } catch (IOException e) {
                         logger.warn("could not delete server " + cloudServer.getServerName());
                     }

@@ -4,4 +4,5 @@ include 'api-cloud'
 include 'application'
 include 'http-client'
 include 'service-provider'
+include 'template'
 
